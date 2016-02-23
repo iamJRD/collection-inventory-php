@@ -44,5 +44,35 @@
             return $this->quantity;
         }
 
+        function getId()
+        {
+            return $this->id;
+        }
+// FUNCTIONS
+        function save()
+        {
+            $GLOBALS['DB']->exec("INSERT INTO collections (name, description, quantity) VALUES ('{$this->getName()}, {$this->getDescription()}, {$this->getQuantity()}');");
+            $this->id = $GLOBALS['DB']->lastInsertId();
+        }
+
+        static function getAll()
+        {
+            $returned_collections = $GLOBALS['DB']->query("SELECT * FROM collections;");
+            $collections = array();
+            foreach($returned_collections as $collection) {
+                $name = $collection['name'];
+                $description = $collection['description'];
+                $quantity = $collection['quantity'];
+                $id = $collection['id'];
+                $new_collection = new Collection($name, $description, $quantity, $id);
+                array_push($collections, $new_collection);
+            }
+        }
+
+        static function deleteAll()
+        {
+            $GLOBALS['DB']->exec("DELETE FROM collections");
+        }
+
     }
 ?>
